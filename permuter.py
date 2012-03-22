@@ -4,15 +4,24 @@ import enchant
 import itertools
 
 def permute(string, numchars):
+  words = {}
+  count = 0
   d = enchant.Dict("en_US")
-  l = list(string)
-  perms = list(itertools.permutations(l))
+  #l = list(string)
+  perms = itertools.permutations(string, int(numchars))
   #now have a spellchecker and all permutations
-  #keep only words which are valid and <= numchars
-  for word in perms:
-    wd = "".join(word) #convert list to word
-    if len(wd) <= numchars and d.check(wd):
-      print wd
+  #keep only words which are valid and <= numchars and not seen before
+  while True:
+    try:
+      word = perms.next()
+      wd = "".join(word) #convert list to word
+      if len(wd) <= numchars and d.check(wd) and wd not in words:
+        print wd
+        count += 1
+        words[wd] = 1
+    except StopIteration:
+      break
+  print count, " possible words"
 
 def main():
   if not len(sys.argv) == 3:
